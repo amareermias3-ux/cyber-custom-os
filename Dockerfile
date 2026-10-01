@@ -1,36 +1,19 @@
-# Python 3.11 Debian-based base image
-FROM python:3.11-slim-bullseye
+FROM python:3.11-slim
 
-# Environment variables
-ENV PYTHONUNBUFFERED=1 \
-    DEBIAN_FRONTEND=noninteractive
-
-# Essential system tools መጫን
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    bash \
-    curl \
-    git \
-    procps \
+    nmap \
     net-tools \
-    iputils-ping \
+    procps \
+    bash \
     && rm -rf /var/lib/apt/lists/*
 
-# Working directory ማዘጋጀት
 WORKDIR /app
 
-# Python dependencies (psutil) መጫን
-RUN pip install --no-cache-dir psutil
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt || pip install --no-cache-dir psutil
 
-# የፕሮጀክቱን ፋይሎች ኮፒ ማድረግ
-COPY . /app
+COPY . .
 
-# የ Shell ስክሪፕቶች Executable እንዲሆኑ ማድረግ
-RUN chmod +x modules/privacy/*.sh \
-    modules/security/*.sh \
-    modules/forensics/*.sh \
-    modules/offensive/*.sh \
-    install.sh \
-    tests/test_modules.sh 2>/dev/null || true
+RUN chmod +x build_iso.sh install.sh modules/dashboard.py tests/*.sh || true
 
-# Container ሲነሳ በነባሪነት CLI Dashboard እንዲከፈት ማድረግ
-CMD ["python", "modules/dashboard.py"]
+CMD ["python3", "modules/dashboard.py"]
