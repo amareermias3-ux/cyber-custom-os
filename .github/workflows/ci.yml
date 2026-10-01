@@ -1,0 +1,39 @@
+name: Cyber Custom OS CI/CD Build & Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Validate Shell Scripts Syntax
+      run: |
+        bash -n modules/privacy/anon_mode.sh
+        bash -n modules/security/vault_hardening.sh
+        bash -n modules/forensics/dfir_toolkit.sh
+        bash -n modules/offensive/recon_toolkit.sh
+        bash -n build_iso.sh
+
+    - name: Test ISO Build Packaging Engine
+      run: |
+        chmod +x build_iso.sh
+        bash build_iso.sh
+
+    - name: Verify Build Artifacts
+      run: |
+        test -d iso_build
+        test -f iso_build/manifest.txt
+        echo "✔ All Build Artifacts Validated Successfully!"
