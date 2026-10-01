@@ -6,10 +6,10 @@ SUDO_PREFIX = "" if IS_WINDOWS else "sudo "
 
 def show_banner():
     os.system('cls' if IS_WINDOWS else 'clear')
-    print("=" * 65)
+    print("=" * 68)
     print("      CYBER CUSTOM OS - CONTROL CENTER")
     print("      [ Kali + Parrot + Tails + Qubes + CAINE Hybrid ]")
-    print("=" * 65)
+    print("=" * 68)
 
 def main_menu():
     while True:
@@ -21,11 +21,12 @@ def main_menu():
         print("5. 🧹 Anti-Forensic RAM Wipe (Tails Memory Clean)")
         print("6. 🔍 CAINE Digital Forensics & Incident Audit")
         print("7. 🔑 Evidence Integrity Checker (SHA-256 Hash)")
-        print("8. 🛠️   Security Tools Container (Kali/CAINE Sandbox)")
-        print("9. 🚪 ውጣ (Exit)")
-        print("-" * 65)
+        print("8. 🎯 Kali Recon & Vulnerability Audit Engine")
+        print("9. 🛠️   Security Tools Container (Kali/CAINE Sandbox)")
+        print("10. 🚪 ውጣ (Exit)")
+        print("-" * 68)
         
-        choice = input("ምርጫዎን ያስገቡ (1-9): ").strip()
+        choice = input("ምርጫዎን ያስገቡ (1-10): ").strip()
         
         if choice == '1':
             print("\n[+] Privacy Mode በመጀመር ላይ...")
@@ -59,14 +60,18 @@ def main_menu():
             os.system("bash ./modules/forensics/dfir_toolkit.sh hash")
             input("\nለመቀጠል Enter ን ይጫኑ...")
         elif choice == '8':
+            print("\n[+] Kali Target Reconnaissance Engine በመጀመር ላይ...")
+            os.system("bash ./modules/offensive/recon_toolkit.sh scan")
+            input("\nለመቀጠል Enter ን ይጫኑ...")
+        elif choice == '9':
             print("\n[+] Security Container በመክፈት ላይ...")
             os.system("docker run -it cyber-tools:v1")
             input("\nለመቀጠል Enter ን ይጫኑ...")
-        elif choice == '9':
+        elif choice == '10':
             print("\nስለተጠቀሙ እናመሰግናለን! መልካም ቀን።")
             sys.exit(0)
         else:
-            input("\n❌ የተሳሳተ ምርጫ! እባክዎን ከ 1 እስከ 9 ይመረጡ (Enter ይጫኑ)...")
+            input("\n❌ የተሳሳተ ምርጫ! እባክዎን ከ 1 እስከ 10 ይመረጡ (Enter ይጫኑ)...")
 
 if __name__ == "__main__":
     main_menu()
