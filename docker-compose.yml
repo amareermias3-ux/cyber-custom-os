@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  cyber-os:
+    build: .
+    image: cyber-custom-os:latest
+    container_name: cyber_custom_os_container
+    stdin_open: true # ለ Interactive CLI አስፈላጊ ነው
+    tty: true        # ቴርሚናል እንዲሰጥ ያደርጋል
+    network_mode: "host"
+    restart: "no"
