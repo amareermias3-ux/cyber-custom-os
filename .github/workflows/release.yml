@@ -1,0 +1,36 @@
+name: Cyber Custom OS Automated Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Make Scripts Executable
+      run: chmod +x build_iso.sh install.sh
+
+    - name: Build OS Package
+      run: ./build_iso.sh
+
+    - name: Zip Build Package
+      run: |
+        zip -r cyber-custom-os-build.zip iso_build/ README.md build_iso.sh modules/ install.sh
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: cyber-custom-os-build.zip
+        name: Cyber Custom OS Release ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
