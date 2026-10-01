@@ -1,3 +1,10 @@
+## 📥 Quick Installation (One-Command Setup)
+
+Run the following command in your Linux terminal to automatically install Cyber Custom OS:
+
+```bash
+curl -sSL [https://raw.githubusercontent.com/amareermias3-ux/cyber-custom-os/main/install.sh](https://raw.githubusercontent.com/amareermias3-ux/cyber-custom-os/main/install.sh) | sudo bash
+
 # Cyber Custom OS - Hybrid Security Framework 🛡️🌍
 
 ![CI/CD Build Status](https://github.com/amareermias3-ux/cyber-custom-os/actions/workflows/ci.yml/badge.svg)
