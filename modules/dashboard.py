@@ -6,10 +6,10 @@ SUDO_PREFIX = "" if IS_WINDOWS else "sudo "
 
 def show_banner():
     os.system('cls' if IS_WINDOWS else 'clear')
-    print("=" * 60)
+    print("=" * 65)
     print("      CYBER CUSTOM OS - CONTROL CENTER")
     print("      [ Kali + Parrot + Tails + Qubes + CAINE Hybrid ]")
-    print("=" * 60)
+    print("=" * 65)
 
 def main_menu():
     while True:
@@ -19,11 +19,13 @@ def main_menu():
         print("3. 🌐 የ IP እና የ Tor ሁኔታን ፈትሽ")
         print("4. 🛡️  Kernel Hardening ተግብር (Parrot Anti-Exploit)")
         print("5. 🧹 Anti-Forensic RAM Wipe (Tails Memory Clean)")
-        print("6. 🛠️   Security Tools Container (Kali/CAINE Sandbox)")
-        print("7. 🚪 ውጣ (Exit)")
-        print("-" * 60)
+        print("6. 🔍 CAINE Digital Forensics & Incident Audit")
+        print("7. 🔑 Evidence Integrity Checker (SHA-256 Hash)")
+        print("8. 🛠️   Security Tools Container (Kali/CAINE Sandbox)")
+        print("9. 🚪 ውጣ (Exit)")
+        print("-" * 65)
         
-        choice = input("ምርጫዎን ያስገቡ (1-7): ").strip()
+        choice = input("ምርጫዎን ያስገቡ (1-9): ").strip()
         
         if choice == '1':
             print("\n[+] Privacy Mode በመጀመር ላይ...")
@@ -49,14 +51,22 @@ def main_menu():
             os.system(f"{SUDO_PREFIX}bash ./modules/security/vault_hardening.sh wipe")
             input("\nለመቀጠል Enter ን ይጫኑ...")
         elif choice == '6':
+            print("\n[+] Incident Audit በማካሄድ ላይ...")
+            os.system("bash ./modules/forensics/dfir_toolkit.sh audit")
+            input("\nለመቀጠል Enter ን ይጫኑ...")
+        elif choice == '7':
+            print("\n[+] Evidence Integrity Verification...")
+            os.system("bash ./modules/forensics/dfir_toolkit.sh hash")
+            input("\nለመቀጠል Enter ን ይጫኑ...")
+        elif choice == '8':
             print("\n[+] Security Container በመክፈት ላይ...")
             os.system("docker run -it cyber-tools:v1")
             input("\nለመቀጠል Enter ን ይጫኑ...")
-        elif choice == '7':
+        elif choice == '9':
             print("\nስለተጠቀሙ እናመሰግናለን! መልካም ቀን።")
             sys.exit(0)
         else:
-            input("\n❌ የተሳሳተ ምርጫ! እባክዎን ከ 1 እስከ 7 ይመረጡ (Enter ይጫኑ)...")
+            input("\n❌ የተሳሳተ ምርጫ! እባክዎን ከ 1 እስከ 9 ይመረጡ (Enter ይጫኑ)...")
 
 if __name__ == "__main__":
     main_menu()
