@@ -1,192 +1,96 @@
+#!/usr/bin/env python3
 import os
 import sys
-import platform
+import time
 import socket
+import psutil
 
-# Windows terminal UTF-8 encoding fix
-if hasattr(sys.stdout, 'reconfigure'):
-    sys.stdout.reconfigure(encoding='utf-8')
+# ANSI Color Codes for Terminal UI
+GREEN = "\033[92m"
+CYAN = "\033[96m"
+YELLOW = "\033[93m"
+RED = "\033[91m"
+BOLD = "\033[1m"
+RESET = "\033[0m"
 
-IS_WINDOWS = os.name == 'nt'
-SUDO_PREFIX = "" if IS_WINDOWS else "sudo "
-
-def get_system_stats():
-    """Retrieve basic system resource metrics."""
+def get_ip():
+    """Gets the primary local IP address."""
     try:
-        import psutil
-        cpu_usage = f"{psutil.cpu_percent(interval=0.1)}%"
-        ram = psutil.virtual_memory()
-        ram_usage = f"{ram.percent}% ({ram.used // (1024**2)}MB / {ram.total // (1024**2)}MB)"
-    except ImportError:
-        cpu_usage = "Active"
-        ram_usage = "Active"
-
-    try:
-        hostname = socket.gethostname()
-        local_ip = socket.gethostbyname(hostname)
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
     except Exception:
-        local_ip = "127.0.0.1"
+        return "127.0.0.1"
 
-    os_info = f"{platform.system()} {platform.release()}"
-    return cpu_usage, ram_usage, local_ip, os_info
+def draw_bar(percent, length=20):
+    """Draws a visual progress bar for resource usage."""
+    filled = int(length * percent / 100)
+    bar = "█" * filled + "-" * (length - filled)
+    if percent > 85:
+        color = RED
+    elif percent > 60:
+        color = YELLOW
+    else:
+        color = GREEN
+    return f"[{color}{bar}{RESET}] {percent:.1f}%"
 
-LANG = {
-    'EN': {
-        'title': "CYBER CUSTOM OS - ULTIMATE CONTROL CENTER",
-        'subtitle': "[ Kali + Parrot + Tails + Qubes + CAINE + BlackArch Hybrid ]",
-        'opt1': "🔒 Enable Privacy Mode (Tails Tor Redirection)",
-        'opt2': "🔓 Disable Privacy Mode (Normal Network)",
-        'opt3': "🌐 Check IP & Tor Connection Status",
-        'opt4': "🛡️ Apply Kernel Hardening (Parrot Anti-Exploit)",
-        'opt5': "🧹 Anti-Forensic RAM Wipe (Tails Memory Clean)",
-        'opt6': "🔍 CAINE Digital Forensics & Incident Audit",
-        'opt7': "🔑 Evidence Integrity Checker (SHA-256 Hash)",
-        'opt8': "🎯 Kali Recon & Vulnerability Audit Engine",
-        'opt9': "🧊 Qubes-Style App Isolation & Sandboxing",
-        'opt10': "⚔️ Advanced Kali & BlackArch Offensive Arsenal",
-        'opt11': "🛠️ Security Tools Container (Kali/CAINE Sandbox)",
-        'opt12': "🌐 Switch Language / ቋንቋ ይቀይሩ (Current: English)",
-        'opt13': "🚪 Exit",
-        'prompt': "Enter your choice (1-13): ",
-        'start_privacy': "\n[+] Starting Privacy Mode...",
-        'stop_privacy': "\n[-] Stopping Privacy Mode...",
-        'check_ip': "\n[*] Checking Network & Tor Status...",
-        'apply_hardening': "\n[+] Applying Kernel & Network Hardening...",
-        'ram_wipe': "\n[!] Flushing RAM Cache & Volatile Logs...",
-        'forensics_audit': "\n[+] Running Incident Audit...",
-        'integrity_check': "\n[+] Verifying Evidence Integrity...",
-        'kali_recon': "\n[+] Starting Kali Target Reconnaissance Engine...",
-        'qubes_iso': "\n[+] Enforcing Qubes Application Sandboxing...",
-        'adv_arsenal': "\n[+] Launching Advanced Kali & BlackArch Arsenal...",
-        'sec_container': "\n[+] Launching Security Container...",
-        'press_enter': "\nPress Enter to continue...",
-        'invalid_opt': "\n❌ Invalid choice! Please select 1-13 (Press Enter)...",
-        'exit_msg': "\nThank you for using Cyber Custom OS! Goodbye."
-    },
-    'AM': {
-        'title': "CYBER CUSTOM OS - የመጨረሻው የመቆጣጠሪያ ማዕከል",
-        'subtitle': "[ Kali + Parrot + Tails + Qubes + CAINE + BlackArch Hybrid ]",
-        'opt1': "🔒 Privacy Mode አብራ (Tails Tor Redirection)",
-        'opt2': "🔓 Privacy Mode አጥፋ (Normal Network)",
-        'opt3': "🌐 የ IP እና የ Tor ሁኔታን ፈትሽ",
-        'opt4': "🛡️ Kernel Hardening ተግብር (Parrot Anti-Exploit)",
-        'opt5': "🧹 Anti-Forensic RAM Wipe (Tails Memory Clean)",
-        'opt6': "🔍 CAINE Digital Forensics & Incident Audit",
-        'opt7': "🔑 Evidence Integrity Checker (SHA-256 Hash)",
-        'opt8': "🎯 Kali Recon & Vulnerability Audit Engine",
-        'opt9': "🧊 Qubes-Style App Isolation & Sandboxing",
-        'opt10': "⚔️ Advanced Kali & BlackArch Offensive Arsenal",
-        'opt11': "🛠️ Security Tools Container (Kali/CAINE Sandbox)",
-        'opt12': "🌐 Switch Language / ቋንቋ ይቀይሩ (አሁን፡ አማርኛ)",
-        'opt13': "🚪 ውጣ (Exit)",
-        'prompt': "ምርጫዎን ያስገቡ (1-13): ",
-        'start_privacy': "\n[+] Privacy Mode በመጀመር ላይ...",
-        'stop_privacy': "\n[-] Privacy Mode በማቆም ላይ...",
-        'check_ip': "\n[*] የኔትወርክ ሁኔታ በማረጋገጥ ላይ...",
-        'apply_hardening': "\n[+] Kernel & Network Hardening በመተግበር ላይ...",
-        'ram_wipe': "\n[!] RAM Cache & Volatile Log Flush በማድረግ ላይ...",
-        'forensics_audit': "\n[+] Incident Audit በማካሄድ ላይ...",
-        'integrity_check': "\n[+] Evidence Integrity Verification...",
-        'kali_recon': "\n[+] Kali Target Reconnaissance Engine በመጀመር ላይ...",
-        'qubes_iso': "\n[+] የ Qubes መተግበሪያዎች ማግለል (Sandboxing) በመተግበር ላይ...",
-        'adv_arsenal': "\n[+] የ Advanced Kali & BlackArch መሳሪያዎችን በመክፈት ላይ...",
-        'sec_container': "\n[+] Security Container በመክፈት ላይ...",
-        'press_enter': "\nለመቀጠል Enter ን ይጫኑ...",
-        'invalid_opt': "\n❌ የተሳሳተ ምርጫ! እባክዎን ከ 1 እስከ 13 ይመረጡ (Enter ይጫኑ)...",
-        'exit_msg': "\nስለተጠቀሙ እናመሰግናለን! መልካም ቀን።"
-    }
-}
+def display_dashboard():
+    """Clears terminal and prints the main dashboard interface."""
+    os.system("clear" if os.name == "posix" else "cls")
+    hostname = socket.gethostname()
+    ip_addr = get_ip()
 
-current_lang = 'EN'
+    cpu_usage = psutil.cpu_percent(interval=0.3)
+    mem = psutil.virtual_memory()
+    disk = psutil.disk_usage('/')
 
-def show_banner():
-    os.system('cls' if IS_WINDOWS else 'clear')
-    txt = LANG[current_lang]
-    cpu, ram, ip, os_sys = get_system_stats()
-    
-    print("=" * 74)
-    print(f"      {txt['title']}")
-    print(f"  {txt['subtitle']}")
-    print("=" * 74)
-    print(f"  🖥️ OS: {os_sys}  |  🧠 RAM: {ram}  |  ⚡ CPU: {cpu}  |  🌐 IP: {ip}")
-    print("=" * 74)
+    print(f"{CYAN}{BOLD}" + "="*58 + f"{RESET}")
+    print(f"{GREEN}{BOLD}          🛡️  CYBER CUSTOM OS - CLI DASHBOARD  🛡️{RESET}")
+    print(f"{CYAN}{BOLD}" + "="*58 + f"{RESET}")
+    print(f"{BOLD} Hostname :{RESET} {hostname:<20} | {BOLD}Local IP:{RESET} {ip_addr}")
+    print(f"{CYAN}" + "-"*58 + f"{RESET}")
 
-def main_menu():
-    global current_lang
+    print(f"\n{BOLD}📊 System Resource Monitor:{RESET}")
+    print(f" CPU Usage : {draw_bar(cpu_usage)}")
+    print(f" RAM Usage : {draw_bar(mem.percent)} ({mem.used // (1024**2)}MB / {mem.total // (1024**2)}MB)")
+    print(f" Disk Space: {draw_bar(disk.percent)} ({disk.used // (1024**3)}GB / {disk.total // (1024**3)}GB)")
+
+    print(f"\n{CYAN}" + "-"*58 + f"{RESET}")
+    print(f"{BOLD}🛠️  Quick Security Tools Menu:{RESET}")
+    print(" [1] Check Nmap Scanner Status")
+    print(" [2] View Active Network Connections")
+    print(" [3] Run System Update Check")
+    print(" [4] Refresh Dashboard")
+    print(" [0] Exit Dashboard")
+    print(f"{CYAN}" + "="*58 + f"{RESET}")
+
+def main():
     while True:
-        show_banner()
-        txt = LANG[current_lang]
-        print(f"\n1.  {txt['opt1']}")
-        print(f"2.  {txt['opt2']}")
-        print(f"3.  {txt['opt3']}")
-        print(f"4.  {txt['opt4']}")
-        print(f"5.  {txt['opt5']}")
-        print(f"6.  {txt['opt6']}")
-        print(f"7.  {txt['opt7']}")
-        print(f"8.  {txt['opt8']}")
-        print(f"9.  {txt['opt9']}")
-        print(f"10. {txt['opt10']}")
-        print(f"11. {txt['opt11']}")
-        print(f"12. {txt['opt12']}")
-        print(f"13. {txt['opt13']}")
-        print("-" * 74)
+        display_dashboard()
+        choice = input(f"\n{YELLOW}{BOLD}Select an option [0-4]: {RESET}").strip()
         
-        choice = input(txt['prompt']).strip()
-        
-        if choice == '1':
-            print(txt['start_privacy'])
-            os.system(f"{SUDO_PREFIX}bash ./modules/privacy/anon_mode.sh start")
-            input(txt['press_enter'])
-        elif choice == '2':
-            print(txt['stop_privacy'])
-            os.system(f"{SUDO_PREFIX}bash ./modules/privacy/anon_mode.sh stop")
-            input(txt['press_enter'])
-        elif choice == '3':
-            print(txt['check_ip'])
-            if IS_WINDOWS:
-                os.system("curl https://check.torproject.org/api/ip")
-            else:
-                os.system(f"{SUDO_PREFIX}bash ./modules/privacy/anon_mode.sh status")
-            input(txt['press_enter'])
-        elif choice == '4':
-            print(txt['apply_hardening'])
-            os.system(f"{SUDO_PREFIX}bash ./modules/security/vault_hardening.sh harden")
-            input(txt['press_enter'])
-        elif choice == '5':
-            print(txt['ram_wipe'])
-            os.system(f"{SUDO_PREFIX}bash ./modules/security/vault_hardening.sh wipe")
-            input(txt['press_enter'])
-        elif choice == '6':
-            print(txt['forensics_audit'])
-            os.system("bash ./modules/forensics/dfir_toolkit.sh audit")
-            input(txt['press_enter'])
-        elif choice == '7':
-            print(txt['integrity_check'])
-            os.system("bash ./modules/forensics/dfir_toolkit.sh hash")
-            input(txt['press_enter'])
-        elif choice == '8':
-            print(txt['kali_recon'])
-            os.system("bash ./modules/offensive/recon_toolkit.sh scan")
-            input(txt['press_enter'])
-        elif choice == '9':
-            print(txt['qubes_iso'])
-            os.system("bash ./modules/security/qubes_isolation.sh")
-            input(txt['press_enter'])
-        elif choice == '10':
-            print(txt['adv_arsenal'])
-            os.system("bash ./modules/offensive/adv_kali_arsenal.sh")
-            input(txt['press_enter'])
-        elif choice == '11':
-            print(txt['sec_container'])
-            os.system("docker run -it cyber-tools:v1")
-            input(txt['press_enter'])
-        elif choice == '12':
-            current_lang = 'AM' if current_lang == 'EN' else 'EN'
-        elif choice == '13':
-            print(txt['exit_msg'])
+        if choice == "1":
+            print(f"\n{GREEN}[*] Checking Nmap Status...{RESET}")
+            os.system("nmap --version 2>/dev/null || echo 'Nmap is not installed. Install via: sudo apt install nmap'")
+            input("\nPress Enter to return...")
+        elif choice == "2":
+            print(f"\n{GREEN}[*] Listening Ports & Active Connections:{RESET}")
+            os.system("ss -tuln 2>/dev/null || netstat -tuln")
+            input("\nPress Enter to return...")
+        elif choice == "3":
+            print(f"\n{GREEN}[*] System Package Update Check...{RESET}")
+            os.system("sudo apt update -s 2>/dev/null || echo 'Note: Run with sudo for full update permissions'")
+            input("\nPress Enter to return...")
+        elif choice == "4":
+            continue
+        elif choice == "0":
+            print(f"\n{GREEN}Exiting Dashboard. Goodbye!{RESET}")
             sys.exit(0)
         else:
-            input(txt['invalid_opt'])
+            print(f"\n{RED}Invalid selection! Please enter a number between 0 and 4.{RESET}")
+            time.sleep(1)
 
 if __name__ == "__main__":
-    main_menu()
+    main()
