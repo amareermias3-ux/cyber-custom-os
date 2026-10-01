@@ -1,6 +1,11 @@
 import os
 import sys
+import os
+import sys
 
+# Windows terminal UTF-8 encoding fix
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
 IS_WINDOWS = os.name == 'nt'
 SUDO_PREFIX = "" if IS_WINDOWS else "sudo "
 
