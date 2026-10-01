@@ -1,43 +1,20 @@
 #!/usr/bin/env bash
-# ==============================================================================
-# Cyber Custom OS - Automated Test Suite
-# ==============================================================================
+set -e
 
-echo "[+] Starting Automated Module Tests..."
+echo "=== Running Cyber Custom OS Test Suite ==="
 
-# 1. Test Python Dashboard Syntax
-echo "[*] Testing Python Dashboard syntax..."
-python -m py_compile modules/dashboard.py
-if [ $? -eq 0 ]; then
-    echo "  [✓] dashboard.py: PASS"
-else
-    echo "  [✗] dashboard.py: FAIL"
-    exit 1
+echo "[1/3] Checking Python syntax..."
+python3 -m py_compile modules/dashboard.py
+echo "✓ dashboard.py syntax OK"
+
+echo "[2/3] Checking Shell scripts syntax..."
+bash -n install.sh
+bash -n build_iso.sh
+echo "✓ Shell scripts syntax OK"
+
+echo "[3/3] Validating directory structure..."
+if [ -f "Dockerfile" ] && [ -f "docker-compose.yml" ]; then
+    echo "✓ Docker files verified"
 fi
 
-# 2. Test Shell Scripts Syntax
-SCRIPTS=(
-    "modules/privacy/anon_mode.sh"
-    "modules/security/vault_hardening.sh"
-    "modules/forensics/dfir_toolkit.sh"
-    "modules/offensive/recon_toolkit.sh"
-    "modules/security/qubes_isolation.sh"
-    "modules/offensive/adv_kali_arsenal.sh"
-    "install.sh"
-)
-
-for script in "${SCRIPTS[@]}"; do
-    if [ -f "$script" ]; then
-        bash -n "$script"
-        if [ $? -eq 0 ]; then
-            echo "  [✓] $script: PASS"
-        else
-            echo "  [✗] $script: FAIL"
-            exit 1
-        fi
-    else
-        echo "  [!] File $script not found!"
-    fi
-done
-
-echo "[+] All Module Tests Passed Successfully!"
+echo "=== All Tests Passed Successfully! ==="

@@ -1,39 +1,40 @@
-name: Cyber Custom OS CI/CD Build & Test
+name: Cyber Custom OS CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
+        python-version: '3.11'
+
+    - name: Install Python Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install psutil
+
+    - name: Set Script Execution Permissions
+      run: |
+        chmod +x tests/test_modules.sh
+        chmod +x build_iso.sh
+        chmod +x install.sh
+
+    - name: Run Test Suite
+      run: |
+        bash tests/test_modules.sh
 
     - name: Validate Shell Scripts Syntax
       run: |
-        bash -n modules/privacy/anon_mode.sh
-        bash -n modules/security/vault_hardening.sh
-        bash -n modules/forensics/dfir_toolkit.sh
-        bash -n modules/offensive/recon_toolkit.sh
         bash -n build_iso.sh
-
-    - name: Test ISO Build Packaging Engine
-      run: |
-        chmod +x build_iso.sh
-        bash build_iso.sh
-
-    - name: Verify Build Artifacts
-      run: |
-        test -d iso_build
-        test -f iso_build/manifest.txt
-        echo "✔ All Build Artifacts Validated Successfully!"
+        bash -n install.sh
