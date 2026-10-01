@@ -1,31 +1,36 @@
-## 📥 Quick Installation (One-Command Setup)
+# 🛡️ Cyber Custom OS Framework
 
-Run the following command in your Linux terminal to automatically install Cyber Custom OS:
+![Release](https://img.shields.io/badge/release-v1.2.0-blue.svg)
+![Python](https://img.shields.io/badge/python-3.11+-green.svg)
+![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)
+![Docker](https://img.shields.io/badge/docker-ready-0db7ed.svg)
+![License](https://img.shields.io/badge/license-MIT-orange.svg)
 
-```bash
-curl -sSL [https://raw.githubusercontent.com/amareermias3-ux/cyber-custom-os/main/install.sh](https://raw.githubusercontent.com/amareermias3-ux/cyber-custom-os/main/install.sh) | sudo bash
-
-# Cyber Custom OS - Hybrid Security Framework 🛡️🌍
-
-![CI/CD Build Status](https://github.com/amareermias3-ux/cyber-custom-os/actions/workflows/ci.yml/badge.svg)
-
-A custom hybrid security framework combining features from top cybersecurity Linux distributions: **Kali Linux**, **Parrot OS**, **Tails OS**, **Qubes OS**, **CAINE OS**, and **BlackArch**.
+**Cyber Custom OS** is a hybrid cybersecurity, privacy, and system-hardening framework combining key features inspired by **Kali Linux, Parrot OS, Tails, Qubes OS, CAINE, and BlackArch**.
 
 ---
 
-## 🇬🇧 English Documentation
+## 🌟 Core Features
 
-### 🚀 Key Modules
-1. **🔒 Tails Privacy Mode (`modules/privacy/anon_mode.sh`):** Redirects system traffic through Tor network.
-2. **🛡️ Parrot Kernel Hardening (`modules/security/vault_hardening.sh`):** Anti-exploit and kernel security enhancements.
-3. **🧹 Anti-Forensics RAM Wipe (`modules/security/vault_hardening.sh`):** Flushes RAM cache and temporary volatile logs.
-4. **🔍 CAINE Digital Forensics Toolkit (`modules/forensics/dfir_toolkit.sh`):** Collects volatile evidence and computes SHA-256 integrity hashes.
-5. **🎯 Kali Recon Engine (`modules/offensive/recon_toolkit.sh`):** Automated target reconnaissance and HTTP header audit.
-6. **🧊 Qubes-Style App Isolation (`modules/security/qubes_isolation.sh`):** AppArmor and Firejail sandboxing.
-7. **⚔️ BlackArch Offensive Arsenal (`modules/offensive/adv_kali_arsenal.sh`):** Penetration testing tools and exploit wrappers.
-8. **💻 Multilingual Control Center (`modules/dashboard.py`):** Interactive CLI supporting English & Amharic switching.
+- 📊 **Real-Time System Dashboard:** Live monitoring of CPU, RAM, OS kernel, and IP addresses via Python CLI.
+- 🕵️ **Anonymity Suite (Tails Mode):** MAC address spoofing, Tor routing, and RAM/cache cleanup scripts.
+- 🔒 **System Isolation (Qubes Mode):** Sandboxed environment setup and security vault hardening.
+- 🧪 **Automated Testing:** Built-in shell script & python syntax validator (`tests/test_modules.sh`).
+- 🐳 **Dockerized Deployment:** Containerized setup via `Dockerfile` & `docker-compose.yml`.
+- 💿 **Live ISO Generator:** Custom Debian-based ISO compilation script (`build_iso.sh`).
 
-### 🛠️ Quick Usage
-Launch Central Control Dashboard:
+---
+
+## 🚀 Quick Start Guide
+
+### 1️⃣ Run Locally (Linux / Windows Git Bash)
 ```bash
+# Clone repository
+git clone [https://github.com/amareermias3-ux/cyber-custom-os.git](https://github.com/amareermias3-ux/cyber-custom-os.git)
+cd cyber-custom-os
+
+# Run test suite
+bash tests/test_modules.sh
+
+# Launch Dashboard
 python modules/dashboard.py
