@@ -1,36 +1,22 @@
-# 🛡️ Cyber Custom OS Framework
+# 🛡️ Cyber Custom OS - Framework & ISO Builder
 
-![Release](https://img.shields.io/badge/release-v1.2.0-blue.svg)
-![Python](https://img.shields.io/badge/python-3.11+-green.svg)
-![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)
-![Docker](https://img.shields.io/badge/docker-ready-0db7ed.svg)
-![License](https://img.shields.io/badge/license-MIT-orange.svg)
+![Build Status](https://github.com/amareermias3-ux/cyber-custom-os/actions/workflows/ci.yml/badge.svg)
+![Release](https://img.shields.io/github/v/release/amareermias3-ux/cyber-custom-os)
 
-**Cyber Custom OS** is a hybrid cybersecurity, privacy, and system-hardening framework combining key features inspired by **Kali Linux, Parrot OS, Tails, Qubes OS, CAINE, and BlackArch**.
+Cyber Custom OS is a lightweight custom Linux environment framework featuring a real-time system resource monitor, built-in tool launchers, and automated ISO generation tools.
 
----
+## 🚀 Features
+- **Real-Time CLI Dashboard**: Monitor CPU, RAM, Disk Space, and Local IP address.
+- **Automated ISO Builder**: Easily package core modules into a bootable layout.
+- **Automated Installer**: Quick setup script for dependencies and environment tools.
+- **CI/CD Integrated**: Fully automated testing and release pipeline via GitHub Actions.
 
-## 🌟 Core Features
+## 🛠️ Quick Installation
 
-- 📊 **Real-Time System Dashboard:** Live monitoring of CPU, RAM, OS kernel, and IP addresses via Python CLI.
-- 🕵️ **Anonymity Suite (Tails Mode):** MAC address spoofing, Tor routing, and RAM/cache cleanup scripts.
-- 🔒 **System Isolation (Qubes Mode):** Sandboxed environment setup and security vault hardening.
-- 🧪 **Automated Testing:** Built-in shell script & python syntax validator (`tests/test_modules.sh`).
-- 🐳 **Dockerized Deployment:** Containerized setup via `Dockerfile` & `docker-compose.yml`.
-- 💿 **Live ISO Generator:** Custom Debian-based ISO compilation script (`build_iso.sh`).
+Clone the repository and run the automated installer:
 
----
-
-## 🚀 Quick Start Guide
-
-### 1️⃣ Run Locally (Linux / Windows Git Bash)
 ```bash
-# Clone repository
 git clone [https://github.com/amareermias3-ux/cyber-custom-os.git](https://github.com/amareermias3-ux/cyber-custom-os.git)
 cd cyber-custom-os
-
-# Run test suite
-bash tests/test_modules.sh
-
-# Launch Dashboard
-python modules/dashboard.py
+chmod +x install.sh
+./install.sh
