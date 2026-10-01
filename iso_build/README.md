@@ -1,8 +1,8 @@
-# Cyber Custom OS - Hybrid Security Framework 🛡️🌍
+# Cyber Custom OS - Hybrid Security Framework 🛡️️🌍
+
+![CI/CD Build Status](https://github.com/amareermias3-ux/cyber-custom-os/actions/workflows/ci.yml/badge.svg)
 
 A custom hybrid security framework combining features from top cybersecurity Linux distributions: **Kali Linux**, **Parrot OS**, **Tails OS**, **Qubes OS**, and **CAINE OS**.
-
----
 
 ## 🇬🇧 English Documentation
 

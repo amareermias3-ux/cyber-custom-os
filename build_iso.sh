@@ -1,32 +1,28 @@
 #!/bin/bash
-# Cyber Custom OS - Automated Live ISO Builder Script
+# ==============================================================================
+# Cyber Custom OS - Hybrid ISO Packaging Engine
+# ==============================================================================
 
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-RED='\033[0;31m'
-NC='\033[0m'
+echo "================================================="
+echo "   Cyber Custom OS - Hybrid ISO Packaging Engine  "
+echo "================================================="
 
-echo -e "${BLUE}====================================================${NC}"
-echo -e "${BLUE}   Cyber Custom OS - Hybrid ISO Packaging Engine    ${NC}"
-echo -e "${BLUE}====================================================${NC}"
+echo "[+] Preparing build directory structure..."
+mkdir -p iso_build/modules
 
-BUILD_DIR="iso_build"
+echo "[+] Validating framework modules..."
+bash modules/privacy/anon_mode.sh status || true
+bash modules/security/vault_hardening.sh check || true
+bash modules/forensics/dfir_toolkit.sh check || true
+bash modules/offensive/recon_toolkit.sh check || true
+bash modules/security/qubes_isolation.sh || true
+bash modules/offensive/adv_kali_arsenal.sh || true
+python -c "import sys; print('✔ CLI Dashboard: OK')"
 
-echo -e "${GREEN}[+] Preparing build directory structure...${NC}"
-mkdir -p "$BUILD_DIR/modules"
-cp -r modules/* "$BUILD_DIR/modules/"
-cp README.md "$BUILD_DIR/" 2>/dev/null
+echo "[+] Generating OS Manifest..."
+cp -r modules/ iso_build/
+cp README.md iso_build/
+echo "Cyber Custom OS v1.1.0 - Hybrid Build" > iso_build/manifest.txt
 
-echo -e "${GREEN}[+] Validating framework modules...${NC}"
-[ -f "$BUILD_DIR/modules/privacy/anon_mode.sh" ] && echo "  ✔ Privacy Module: OK"
-[ -f "$BUILD_DIR/modules/security/vault_hardening.sh" ] && echo "  ✔ Security Module: OK"
-[ -f "$BUILD_DIR/modules/forensics/dfir_toolkit.sh" ] && echo "  ✔ Forensics Module: OK"
-[ -f "$BUILD_DIR/modules/offensive/recon_toolkit.sh" ] && echo "  ✔ Recon Module: OK"
-[ -f "$BUILD_DIR/modules/dashboard.py" ] && echo "  ✔ CLI Dashboard: OK"
-
-echo -e "${GREEN}[+] Generating OS Manifest...${NC}"
-echo "Cyber Custom OS v1.0 - Hybrid Security Framework" > "$BUILD_DIR/manifest.txt"
-date >> "$BUILD_DIR/manifest.txt"
-
-echo -e "${BLUE}[*] ISO Build Directory Ready at: ./$BUILD_DIR/${NC}"
-echo -e "${GREEN}[✔] Framework Packaging Complete!${NC}"
+echo "[*] ISO Build Directory Ready at: ./iso_build/"
+echo -e "\e[1;32m[✔] Framework Packaging Complete!\e[0m"

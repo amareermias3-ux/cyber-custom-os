@@ -4,11 +4,10 @@ import sys
 IS_WINDOWS = os.name == 'nt'
 SUDO_PREFIX = "" if IS_WINDOWS else "sudo "
 
-# Multilingual Translations Dictionary
 LANG = {
     'EN': {
-        'title': "CYBER CUSTOM OS - CONTROL CENTER",
-        'subtitle': "[ Kali + Parrot + Tails + Qubes + CAINE Hybrid ]",
+        'title': "CYBER CUSTOM OS - ULTIMATE CONTROL CENTER",
+        'subtitle': "[ Kali + Parrot + Tails + Qubes + CAINE + BlackArch Hybrid ]",
         'opt1': "🔒 Enable Privacy Mode (Tails Tor Redirection)",
         'opt2': "🔓 Disable Privacy Mode (Normal Network)",
         'opt3': "🌐 Check IP & Tor Connection Status",
@@ -17,10 +16,12 @@ LANG = {
         'opt6': "🔍 CAINE Digital Forensics & Incident Audit",
         'opt7': "🔑 Evidence Integrity Checker (SHA-256 Hash)",
         'opt8': "🎯 Kali Recon & Vulnerability Audit Engine",
-        'opt9': "🛠️ Security Tools Container (Kali/CAINE Sandbox)",
-        'opt10': "🌐 Switch Language / ቋንቋ ይቀይሩ (Current: English)",
-        'opt11': "🚪 Exit",
-        'prompt': "Enter your choice (1-11): ",
+        'opt9': "🧊 Qubes-Style App Isolation & Sandboxing",
+        'opt10': "⚔️ Advanced Kali & BlackArch Offensive Arsenal",
+        'opt11': "🛠️ Security Tools Container (Kali/CAINE Sandbox)",
+        'opt12': "🌐 Switch Language / ቋንቋ ይቀይሩ (Current: English)",
+        'opt13': "🚪 Exit",
+        'prompt': "Enter your choice (1-13): ",
         'start_privacy': "\n[+] Starting Privacy Mode...",
         'stop_privacy': "\n[-] Stopping Privacy Mode...",
         'check_ip': "\n[*] Checking Network & Tor Status...",
@@ -29,14 +30,16 @@ LANG = {
         'forensics_audit': "\n[+] Running Incident Audit...",
         'integrity_check': "\n[+] Verifying Evidence Integrity...",
         'kali_recon': "\n[+] Starting Kali Target Reconnaissance Engine...",
+        'qubes_iso': "\n[+] Enforcing Qubes Application Sandboxing...",
+        'adv_arsenal': "\n[+] Launching Advanced Kali & BlackArch Arsenal...",
         'sec_container': "\n[+] Launching Security Container...",
         'press_enter': "\nPress Enter to continue...",
-        'invalid_opt': "\n❌ Invalid choice! Please select 1-11 (Press Enter)...",
+        'invalid_opt': "\n❌ Invalid choice! Please select 1-13 (Press Enter)...",
         'exit_msg': "\nThank you for using Cyber Custom OS! Goodbye."
     },
     'AM': {
-        'title': "CYBER CUSTOM OS - የመቆጣጠሪያ ማዕከል",
-        'subtitle': "[ Kali + Parrot + Tails + Qubes + CAINE Hybrid ]",
+        'title': "CYBER CUSTOM OS - የመጨረሻው የመቆጣጠሪያ ማዕከል",
+        'subtitle': "[ Kali + Parrot + Tails + Qubes + CAINE + BlackArch Hybrid ]",
         'opt1': "🔒 Privacy Mode አብራ (Tails Tor Redirection)",
         'opt2': "🔓 Privacy Mode አጥፋ (Normal Network)",
         'opt3': "🌐 የ IP እና የ Tor ሁኔታን ፈትሽ",
@@ -45,10 +48,12 @@ LANG = {
         'opt6': "🔍 CAINE Digital Forensics & Incident Audit",
         'opt7': "🔑 Evidence Integrity Checker (SHA-256 Hash)",
         'opt8': "🎯 Kali Recon & Vulnerability Audit Engine",
-        'opt9': "🛠️ Security Tools Container (Kali/CAINE Sandbox)",
-        'opt10': "🌐 Switch Language / ቋንቋ ይቀይሩ (አሁን፡ አማርኛ)",
-        'opt11': "🚪 ውጣ (Exit)",
-        'prompt': "ምርጫዎን ያስገቡ (1-11): ",
+        'opt9': "🧊 Qubes-Style App Isolation & Sandboxing",
+        'opt10': "⚔️ Advanced Kali & BlackArch Offensive Arsenal",
+        'opt11': "🛠️ Security Tools Container (Kali/CAINE Sandbox)",
+        'opt12': "🌐 Switch Language / ቋንቋ ይቀይሩ (አሁን፡ አማርኛ)",
+        'opt13': "🚪 ውጣ (Exit)",
+        'prompt': "ምርጫዎን ያስገቡ (1-13): ",
         'start_privacy': "\n[+] Privacy Mode በመጀመር ላይ...",
         'stop_privacy': "\n[-] Privacy Mode በማቆም ላይ...",
         'check_ip': "\n[*] የኔትወርክ ሁኔታ በማረጋገጥ ላይ...",
@@ -57,22 +62,24 @@ LANG = {
         'forensics_audit': "\n[+] Incident Audit በማካሄድ ላይ...",
         'integrity_check': "\n[+] Evidence Integrity Verification...",
         'kali_recon': "\n[+] Kali Target Reconnaissance Engine በመጀመር ላይ...",
+        'qubes_iso': "\n[+] የ Qubes መተግበሪያዎች ማግለል (Sandboxing) በመተግበር ላይ...",
+        'adv_arsenal': "\n[+] የ Advanced Kali & BlackArch መሳሪያዎችን በመክፈት ላይ...",
         'sec_container': "\n[+] Security Container በመክፈት ላይ...",
         'press_enter': "\nለመቀጠል Enter ን ይጫኑ...",
-        'invalid_opt': "\n❌ የተሳሳተ ምርጫ! እባክዎን ከ 1 እስከ 11 ይመረጡ (Enter ይጫኑ)...",
+        'invalid_opt': "\n❌ የተሳሳተ ምርጫ! እባክዎን ከ 1 እስከ 13 ይመረጡ (Enter ይጫኑ)...",
         'exit_msg': "\nስለተጠቀሙ እናመሰግናለን! መልካም ቀን።"
     }
 }
 
-current_lang = 'EN'  # Default Language
+current_lang = 'EN'
 
 def show_banner():
     os.system('cls' if IS_WINDOWS else 'clear')
     txt = LANG[current_lang]
-    print("=" * 68)
+    print("=" * 72)
     print(f"      {txt['title']}")
-    print(f"      {txt['subtitle']}")
-    print("=" * 68)
+    print(f"  {txt['subtitle']}")
+    print("=" * 72)
 
 def main_menu():
     global current_lang
@@ -90,7 +97,9 @@ def main_menu():
         print(f"9.  {txt['opt9']}")
         print(f"10. {txt['opt10']}")
         print(f"11. {txt['opt11']}")
-        print("-" * 68)
+        print(f"12. {txt['opt12']}")
+        print(f"13. {txt['opt13']}")
+        print("-" * 72)
         
         choice = input(txt['prompt']).strip()
         
@@ -130,12 +139,20 @@ def main_menu():
             os.system("bash ./modules/offensive/recon_toolkit.sh scan")
             input(txt['press_enter'])
         elif choice == '9':
+            print(txt['qubes_iso'])
+            os.system("bash ./modules/security/qubes_isolation.sh")
+            input(txt['press_enter'])
+        elif choice == '10':
+            print(txt['adv_arsenal'])
+            os.system("bash ./modules/offensive/adv_kali_arsenal.sh")
+            input(txt['press_enter'])
+        elif choice == '11':
             print(txt['sec_container'])
             os.system("docker run -it cyber-tools:v1")
             input(txt['press_enter'])
-        elif choice == '10':
+        elif choice == '12':
             current_lang = 'AM' if current_lang == 'EN' else 'EN'
-        elif choice == '11':
+        elif choice == '13':
             print(txt['exit_msg'])
             sys.exit(0)
         else:
