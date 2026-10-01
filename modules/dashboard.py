@@ -1,13 +1,34 @@
 import os
 import sys
-import os
-import sys
+import platform
+import socket
 
 # Windows terminal UTF-8 encoding fix
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
+
 IS_WINDOWS = os.name == 'nt'
 SUDO_PREFIX = "" if IS_WINDOWS else "sudo "
+
+def get_system_stats():
+    """Retrieve basic system resource metrics."""
+    try:
+        import psutil
+        cpu_usage = f"{psutil.cpu_percent(interval=0.1)}%"
+        ram = psutil.virtual_memory()
+        ram_usage = f"{ram.percent}% ({ram.used // (1024**2)}MB / {ram.total // (1024**2)}MB)"
+    except ImportError:
+        cpu_usage = "Active"
+        ram_usage = "Active"
+
+    try:
+        hostname = socket.gethostname()
+        local_ip = socket.gethostbyname(hostname)
+    except Exception:
+        local_ip = "127.0.0.1"
+
+    os_info = f"{platform.system()} {platform.release()}"
+    return cpu_usage, ram_usage, local_ip, os_info
 
 LANG = {
     'EN': {
@@ -81,10 +102,14 @@ current_lang = 'EN'
 def show_banner():
     os.system('cls' if IS_WINDOWS else 'clear')
     txt = LANG[current_lang]
-    print("=" * 72)
+    cpu, ram, ip, os_sys = get_system_stats()
+    
+    print("=" * 74)
     print(f"      {txt['title']}")
     print(f"  {txt['subtitle']}")
-    print("=" * 72)
+    print("=" * 74)
+    print(f"  🖥️ OS: {os_sys}  |  🧠 RAM: {ram}  |  ⚡ CPU: {cpu}  |  🌐 IP: {ip}")
+    print("=" * 74)
 
 def main_menu():
     global current_lang
@@ -104,7 +129,7 @@ def main_menu():
         print(f"11. {txt['opt11']}")
         print(f"12. {txt['opt12']}")
         print(f"13. {txt['opt13']}")
-        print("-" * 72)
+        print("-" * 74)
         
         choice = input(txt['prompt']).strip()
         
