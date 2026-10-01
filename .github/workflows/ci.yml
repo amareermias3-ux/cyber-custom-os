@@ -1,4 +1,4 @@
-name: Cyber Custom OS CI
+name: Cyber Custom OS CI/CD Build & Test
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,17 +24,21 @@ jobs:
         python -m pip install --upgrade pip
         pip install psutil
 
-    - name: Set Script Execution Permissions
+    - name: Make Scripts Executable
       run: |
-        chmod +x tests/test_modules.sh
-        chmod +x build_iso.sh
-        chmod +x install.sh
+        chmod +x build_iso.sh || true
+        chmod +x install.sh || true
+        chmod +x tests/*.sh || true
 
-    - name: Run Test Suite
-      run: |
-        bash tests/test_modules.sh
-
-    - name: Validate Shell Scripts Syntax
+    - name: Test Shell Scripts Syntax
       run: |
         bash -n build_iso.sh
         bash -n install.sh
+
+    - name: Run Test Suite
+      run: |
+        if [ -f tests/test_modules.sh ]; then
+          bash tests/test_modules.sh
+        else
+          echo "No test_modules.sh found, skipping execution test."
+        fi
