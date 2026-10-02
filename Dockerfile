@@ -1,19 +1,30 @@
-FROM python:3.11-slim
+# የሊኑክስ (Ubuntu) መሰረትን እንጠቀማለን
+FROM ubuntu:22.04
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# አላስፈላጊ ጥያቄዎችን ለማስቀረት
+ENV DEBIAN_FRONTEND=noninteractive
+
+# አስፈላጊ የሆኑ የሊኑክስ ቱሎችን እና ፓይዘንን መጫን
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
     nmap \
+    tor \
+    proxychains4 \
+    curl \
+    wget \
+    iproute2 \
     net-tools \
-    procps \
-    bash \
     && rm -rf /var/lib/apt/lists/*
 
+# የስራ ማውጫ (Working Directory)
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt || pip install --no-cache-dir psutil
+# ፕሮጀክቱን ወደ ኮንቴይነሩ ማስገባት
+COPY . /app
 
-COPY . .
+# የፓይዘን ላይብረሪዎችን መጫን
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-RUN chmod +x build_iso.sh install.sh modules/dashboard.py tests/*.sh || true
-
-CMD ["python3", "modules/dashboard.py"]
+# ነባሪ ትዕዛዝ
+CMD ["python3", "dashboard.py"]

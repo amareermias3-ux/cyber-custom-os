@@ -6,7 +6,7 @@ services:
     container_name: cyber_custom_os_app
     stdin_open: true
     tty: true
+    privileged: true
     network_mode: host
     volumes:
       - .:/app
-    command: python3 modules/dashboard.py
