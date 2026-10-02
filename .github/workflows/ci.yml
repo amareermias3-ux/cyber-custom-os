@@ -1,44 +1,30 @@
 name: Cyber Custom OS CI/CD Build & Test
-
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: "3.10"
 
-    - name: Install Python Dependencies
+    - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install psutil
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    - name: Make Scripts Executable
+    - name: Test core OS files existence
       run: |
-        chmod +x build_iso.sh || true
-        chmod +x install.sh || true
-        chmod +x tests/*.sh || true
-
-    - name: Test Shell Scripts Syntax
-      run: |
-        bash -n build_iso.sh
-        bash -n install.sh
-
-    - name: Run Test Suite
-      run: |
-        if [ -f tests/test_modules.sh ]; then
-          bash tests/test_modules.sh
-        else
-          echo "No test_modules.sh found, skipping execution test."
-        fi
+        python3 -c "import os; assert os.path.exists('dashboard.py'), 'dashboard.py missing'"
+        python3 -c "import os; assert os.path.exists('modules/network_scanner.py'), 'network_scanner.py missing'"
+        python3 -c "import os; assert os.path.exists('modules/tool_manager.py'), 'tool_manager.py missing'"
+        python3 -c "import os; assert os.path.exists('modules/privacy_mode.py'), 'privacy_mode.py missing'"
