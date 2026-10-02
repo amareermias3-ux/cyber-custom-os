@@ -64,6 +64,8 @@ def display_dashboard():
     print(" [3] Run System Update Check")
     print(" [4] Refresh Dashboard")
     print(" [0] Exit Dashboard")
+    print(" [5] Run Security Port Scanner")
+    print("[6] Generate System Audit Log")
     print(f"{CYAN}" + "="*58 + f"{RESET}")
 
 def main():
