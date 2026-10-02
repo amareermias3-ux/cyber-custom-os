@@ -22,6 +22,10 @@ try:
     import modules.privacy_mode as privacy_mode
 except ImportError:
     pass
+try:
+    import modules.bugbounty_mode as bugbounty_mode
+except ImportError:
+    pass
 
 def clear_screen():
     os.system('clear' if os.name == 'posix' else 'cls')
@@ -43,6 +47,7 @@ def main_menu():
         print("[6] Generate System Audit Log (RAM/CPU)")
         print("[7] OS Tool & Advanced Package Manager")
         print("[8] Activate Privacy & Anonymity Mode (Tails Style)")
+        print("[9] Launch Bug Bounty & CTF Hub (Athena Style)")
         print("[0] Exit / Shutdown")
         print("="*55)
         
@@ -100,7 +105,14 @@ def main_menu():
             except NameError:
                 print("[-] privacy_mode module not loaded.")
             input("\nPress Enter to continue...")
-            
+
+        elif choice == '9':
+            try:
+                bugbounty_mode.run_bugbounty_menu()
+            except NameError:
+                print("[-] bugbounty_mode module not loaded.")
+            input("\nPress Enter to continue...")
+
         elif choice == '0':
             print("\n[+] Shutting down Cyber Custom OS Dashboard. Goodbye!")
             sys.exit(0)
